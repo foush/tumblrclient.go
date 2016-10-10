@@ -7,7 +7,7 @@ import (
 	"errors"
 	"strings"
 	"github.com/dghubble/oauth1"
-	"github.com/tumblr/tumblr.go"
+	"github.com/foush/tumblr.go"
 	"golang.org/x/net/context"
 )
 
@@ -148,6 +148,7 @@ func getResponse(resp *http.Response, e error) (tumblrapi.Response, error) {
 	return response, nil
 }
 
+// Creates a PostRef out of an id and blog name
 func (c *Client) GetPost(id uint64, blogName string) (*tumblrapi.PostRef) {
 	return tumblrapi.NewPostRef(c, &tumblrapi.MiniPost{
 		Id: id,
@@ -155,34 +156,42 @@ func (c *Client) GetPost(id uint64, blogName string) (*tumblrapi.PostRef) {
 	})
 }
 
+// Creates a BlogRef out of the provided name
 func (c *Client) GetBlog(name string) (*tumblrapi.BlogRef) {
 	return tumblrapi.NewBlogRef(c, name)
 }
 
+// Makes a request for user info based on the client's user token/secret values
 func (c *Client) GetUser() (*tumblrapi.User, error) {
 	return tumblrapi.GetUserInfo(c)
 }
 
-func (c *Client) GetDashboard() ([]tumblrapi.PostInterface, error) {
+// Makes a request for the user's dashboard
+func (c *Client) GetDashboard() (*tumblrapi.Dashboard, error) {
 	return c.GetDashboardWithParams(url.Values{})
 }
 
-func (c *Client) GetDashboardWithParams(params url.Values) ([]tumblrapi.PostInterface, error) {
+// Makes a request for the user's dashboard with params
+func (c *Client) GetDashboardWithParams(params url.Values) (*tumblrapi.Dashboard, error) {
 	return tumblrapi.GetDashboard(c, params)
 }
 
+// Makes a request for
 func (c *Client) GetLikes() (*tumblrapi.Likes, error) {
 	return c.GetLikesWithParams(url.Values{})
 }
 
+// Retrieves the posts the current user has liked
 func (c *Client) GetLikesWithParams(params url.Values) (*tumblrapi.Likes, error) {
 	return tumblrapi.GetLikes(c, params)
 }
 
+// Performs a tagged serach with this client, returning the result
 func (c *Client) TaggedSearch(tag string) (*tumblrapi.SearchResults, error) {
 	return tumblrapi.TaggedSearch(c, tag, url.Values{})
 }
 
+// Performs a tagged serach with this client, returning the result
 func (c *Client) TaggedSearchWithParams(tag string, params url.Values) (*tumblrapi.SearchResults, error) {
 	return tumblrapi.TaggedSearch(c, tag, params)
 }
