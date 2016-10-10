@@ -1,4 +1,4 @@
-package tumblrapiclient
+package tumblrclient
 
 import (
 	"net/url"
@@ -15,7 +15,7 @@ const apiBase = "https://api.tumblr.com/v2/"
 
 // The Tumblr API Client object
 type Client struct {
-	tumblrapi.ClientInterface
+	tumblr.ClientInterface
 	consumer *oauth1.Config
 	user *oauth1.Token
 	client *http.Client
@@ -48,51 +48,51 @@ func (c *Client) SetToken(token string, tokenSecret string) {
 }
 
 // Issue GET request to Tumblr API
-func (c *Client) Get(endpoint string) (tumblrapi.Response, error) {
+func (c *Client) Get(endpoint string) (tumblr.Response, error) {
 	return c.GetWithParams(endpoint, url.Values{})
 }
 
 // Issue GET request to Tumblr API with param values
-func (c *Client) GetWithParams(endpoint string, params url.Values) (tumblrapi.Response, error) {
+func (c *Client) GetWithParams(endpoint string, params url.Values) (tumblr.Response, error) {
 	return getResponse(c.GetHttpClient().Get(createRequestURI(appendPath(apiBase,endpoint),params)))
 }
 
 // Issue POST request to Tumblr API
-func (c *Client) Post(endpoint string) (tumblrapi.Response, error) {
+func (c *Client) Post(endpoint string) (tumblr.Response, error) {
 	return c.PostWithParams(endpoint, url.Values{});
 }
 
 // Issue POST request to Tumblr API with param values
-func (c *Client) PostWithParams(endpoint string, params url.Values) (tumblrapi.Response, error) {
+func (c *Client) PostWithParams(endpoint string, params url.Values) (tumblr.Response, error) {
 	return getResponse(c.GetHttpClient().PostForm(appendPath(apiBase, endpoint), params))
 }
 
 // Issue PUT request to Tumblr API
-func (c *Client) Put(endpoint string) (tumblrapi.Response, error) {
+func (c *Client) Put(endpoint string) (tumblr.Response, error) {
 	return c.PutWithParams(endpoint, url.Values{});
 }
 
 // Issue PUT request to Tumblr API with param values
-func (c *Client) PutWithParams(endpoint string, params url.Values) (tumblrapi.Response, error) {
+func (c *Client) PutWithParams(endpoint string, params url.Values) (tumblr.Response, error) {
 	req, err := http.NewRequest("PUT", createRequestURI(appendPath(apiBase, endpoint), params), strings.NewReader(""))
 	if err == nil {
 		return getResponse(c.GetHttpClient().Do(req))
 	}
-	return tumblrapi.Response{}, err
+	return tumblr.Response{}, err
 }
 
 // Issue DELETE request to Tumblr API
-func (c *Client) Delete(endpoint string) (tumblrapi.Response, error) {
+func (c *Client) Delete(endpoint string) (tumblr.Response, error) {
 	return c.DeleteWithParams(endpoint, url.Values{});
 }
 
 // Issue DELETE request to Tumblr API with param values
-func (c *Client) DeleteWithParams(endpoint string, params url.Values) (tumblrapi.Response, error) {
+func (c *Client) DeleteWithParams(endpoint string, params url.Values) (tumblr.Response, error) {
 	req, err := http.NewRequest("DELETE", createRequestURI(appendPath(apiBase, endpoint), params), strings.NewReader(""))
 	if err == nil {
 		return getResponse(c.GetHttpClient().Do(req))
 	}
-	return tumblrapi.Response{}, err
+	return tumblr.Response{}, err
 }
 
 // Retrieve the underlying HTTP client
@@ -130,8 +130,8 @@ func createRequestURI(base string, params url.Values) string {
 }
 
 // Standard way of receiving data from the API response
-func getResponse(resp *http.Response, e error) (tumblrapi.Response, error) {
-	response := tumblrapi.Response{}
+func getResponse(resp *http.Response, e error) (tumblr.Response, error) {
+	response := tumblr.Response{}
 	if e != nil {
 		return response, e
 	}
@@ -141,7 +141,7 @@ func getResponse(resp *http.Response, e error) (tumblrapi.Response, error) {
 	if e != nil {
 		return response, e
 	}
-	response = *tumblrapi.NewResponse(body, resp.Header)
+	response = *tumblr.NewResponse(body, resp.Header)
 	if resp.StatusCode < 200 || resp.StatusCode >= 400 {
 		return response, errors.New(resp.Status)
 	}
@@ -149,49 +149,49 @@ func getResponse(resp *http.Response, e error) (tumblrapi.Response, error) {
 }
 
 // Creates a PostRef out of an id and blog name
-func (c *Client) GetPost(id uint64, blogName string) (*tumblrapi.PostRef) {
-	return tumblrapi.NewPostRef(c, &tumblrapi.MiniPost{
+func (c *Client) GetPost(id uint64, blogName string) (*tumblr.PostRef) {
+	return tumblr.NewPostRef(c, &tumblr.MiniPost{
 		Id: id,
 		BlogName: blogName,
 	})
 }
 
 // Creates a BlogRef out of the provided name
-func (c *Client) GetBlog(name string) (*tumblrapi.BlogRef) {
-	return tumblrapi.NewBlogRef(c, name)
+func (c *Client) GetBlog(name string) (*tumblr.BlogRef) {
+	return tumblr.NewBlogRef(c, name)
 }
 
 // Makes a request for user info based on the client's user token/secret values
-func (c *Client) GetUser() (*tumblrapi.User, error) {
-	return tumblrapi.GetUserInfo(c)
+func (c *Client) GetUser() (*tumblr.User, error) {
+	return tumblr.GetUserInfo(c)
 }
 
 // Makes a request for the user's dashboard
-func (c *Client) GetDashboard() (*tumblrapi.Dashboard, error) {
+func (c *Client) GetDashboard() (*tumblr.Dashboard, error) {
 	return c.GetDashboardWithParams(url.Values{})
 }
 
 // Makes a request for the user's dashboard with params
-func (c *Client) GetDashboardWithParams(params url.Values) (*tumblrapi.Dashboard, error) {
-	return tumblrapi.GetDashboard(c, params)
+func (c *Client) GetDashboardWithParams(params url.Values) (*tumblr.Dashboard, error) {
+	return tumblr.GetDashboard(c, params)
 }
 
 // Makes a request for
-func (c *Client) GetLikes() (*tumblrapi.Likes, error) {
+func (c *Client) GetLikes() (*tumblr.Likes, error) {
 	return c.GetLikesWithParams(url.Values{})
 }
 
 // Retrieves the posts the current user has liked
-func (c *Client) GetLikesWithParams(params url.Values) (*tumblrapi.Likes, error) {
-	return tumblrapi.GetLikes(c, params)
+func (c *Client) GetLikesWithParams(params url.Values) (*tumblr.Likes, error) {
+	return tumblr.GetLikes(c, params)
 }
 
 // Performs a tagged serach with this client, returning the result
-func (c *Client) TaggedSearch(tag string) (*tumblrapi.SearchResults, error) {
-	return tumblrapi.TaggedSearch(c, tag, url.Values{})
+func (c *Client) TaggedSearch(tag string) (*tumblr.SearchResults, error) {
+	return tumblr.TaggedSearch(c, tag, url.Values{})
 }
 
 // Performs a tagged serach with this client, returning the result
-func (c *Client) TaggedSearchWithParams(tag string, params url.Values) (*tumblrapi.SearchResults, error) {
-	return tumblrapi.TaggedSearch(c, tag, params)
+func (c *Client) TaggedSearchWithParams(tag string, params url.Values) (*tumblr.SearchResults, error) {
+	return tumblr.TaggedSearch(c, tag, params)
 }

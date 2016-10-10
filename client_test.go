@@ -1,4 +1,4 @@
-package tumblrapiclient
+package tumblrclient
 
 import (
 	"testing"
