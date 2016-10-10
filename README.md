@@ -1,13 +1,15 @@
-# tumblrapiclient
+# Tumblr API Client Library
 
 This is a concrete implementation of the `ClientInterface` defined in the [Tumblr API](https://github.com/foush/tumblrapi) library.
 
-Install by running `go get github.com/foush/tumblrapiclient`
+This project utilizes an external OAuth1 library you can find at [github.com/dghubble/oauth1](github.com/dghubble/oauth1) 
+
+Install by running `go get github.com/foush/tumblrclient.go`
 
 You can instantiate a client by running
 
 ```
-client := tumblrapi.NewClient(
+client := tumblrclient.NewClient(
         "CONSUMER KEY",
         "CONSUMER SECRET",
     )
