@@ -3,4 +3,8 @@ sudo: false
 go:
   - tip
 before_install:
+  - go get github.com/mattn/goveralls
+  - go get golang.org/x/tools/cmd/cover
   - go get github.com/dghubble/oauth1 github.com/foush/tumblr.go golang.org/x/net/context
+script:
+  - $HOME/gopath/bin/goveralls -service=travis-ci
