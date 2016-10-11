@@ -15,8 +15,8 @@ client := tumblrclient.NewClient(
         "CONSUMER KEY",
         "CONSUMER SECRET",
     )
-    // or
-    client := tumblr_go.NewClientWithToken(
+// or
+client := tumblr_go.NewClientWithToken(
         "CONSUMER KEY",
         "CONSUMER SECRET",
         "USER TOKEN",
